@@ -67,8 +67,7 @@ if col2.button("Reddito di Cittadinanza"):
     st.subheader("📜 Risposta dell'AI:")
     st.write(risposta)
     
-    st.subheader("📦 JSON Completo della Risposta:")
-    st.json(response_data)
+    
     
     if fonti:
         st.subheader("🔗 Fonti Consultabili:")
@@ -94,8 +93,6 @@ if col3.button("Bonus 110%"):
     st.subheader("📜 Risposta dell'AI:")
     st.write(risposta)
     
-    st.subheader("📦 JSON Completo della Risposta:")
-    st.json(response_data)
     
     if fonti:
         st.subheader("🔗 Fonti Consultabili:")
@@ -120,9 +117,7 @@ if col4.button("Presidenzialismo"):
     
     st.subheader("📜 Risposta dell'AI:")
     st.write(risposta)
-    
-    st.subheader("📦 JSON Completo della Risposta:")
-    st.json(response_data)
+
     
     if fonti:
         st.subheader("🔗 Fonti Consultabili:")
