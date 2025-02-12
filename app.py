@@ -15,13 +15,11 @@ def replace_citations(text, citations):
         try:
             idx = int(num_str) - 1
             if 0 <= idx < len(citations):
-                # Se la fonte è un dizionario con 'name' e 'url', usa l'URL
                 fonte = citations[idx]
                 if isinstance(fonte, dict):
                     url = fonte.get("url", "")
                 else:
                     url = fonte
-                # Restituisce un link markdown, es. [10](http://...)
                 return f"[{num_str}]({url})"
             else:
                 return match.group(0)
@@ -66,7 +64,6 @@ def display_response(response_data):
     if fonti:
         st.subheader("🔗 Fonti Consultabili:")
         for i, fonte in enumerate(fonti, start=1):
-            # Se la fonte è un dizionario con chiavi "name" e "url", usale; altrimenti usa il valore intero
             if isinstance(fonte, dict):
                 nome = fonte.get("name", f"Fonte {i}")
                 url = fonte.get("url", "#")
@@ -79,52 +76,56 @@ def display_response(response_data):
 
 # Pulsante per l'autonomia differenziata
 if col1.button("Autonomia Differenziata"):
-    messages = [
-        {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-        {"role": "user", "content": "Com'è cambiata l'opinione di Giorgia Meloni sull'Autonomia Differenziata? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-    ]
-    response = client.chat.completions.create(
-        model="sonar-pro",
-        messages=messages,
-    )
-    response_data = json.loads(response.model_dump_json())
-    display_response(response_data)
+    with st.spinner("Caricamento in corso..."):
+        messages = [
+            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+            {"role": "user", "content": "Com'è cambiata l'opinione di Giorgia Meloni sull'Autonomia Differenziata? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
+        ]
+        response = client.chat.completions.create(
+            model="sonar-pro",
+            messages=messages,
+        )
+        response_data = json.loads(response.model_dump_json())
+        display_response(response_data)
 
 # Pulsante per il Reddito di Cittadinanza
 if col2.button("Reddito di Cittadinanza"):
-    messages = [
-        {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-        {"role": "user", "content": "Com'è evoluta la posizione di Giorgia Meloni sul Reddito di Cittadinanza? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-    ]
-    response = client.chat.completions.create(
-        model="sonar-pro",
-        messages=messages,
-    )
-    response_data = json.loads(response.model_dump_json())
-    display_response(response_data)
+    with st.spinner("Caricamento in corso..."):
+        messages = [
+            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+            {"role": "user", "content": "Com'è evoluta la posizione di Giorgia Meloni sul Reddito di Cittadinanza? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
+        ]
+        response = client.chat.completions.create(
+            model="sonar-pro",
+            messages=messages,
+        )
+        response_data = json.loads(response.model_dump_json())
+        display_response(response_data)
 
 # Pulsante per il Bonus 110%
 if col3.button("Bonus 110%"):
-    messages = [
-        {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-        {"role": "user", "content": "Qual è la posizione di Giorgia Meloni sul Bonus 110%? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-    ]
-    response = client.chat.completions.create(
-        model="sonar-pro",
-        messages=messages,
-    )
-    response_data = json.loads(response.model_dump_json())
-    display_response(response_data)
+    with st.spinner("Caricamento in corso..."):
+        messages = [
+            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+            {"role": "user", "content": "Qual è la posizione di Giorgia Meloni sul Bonus 110%? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
+        ]
+        response = client.chat.completions.create(
+            model="sonar-pro",
+            messages=messages,
+        )
+        response_data = json.loads(response.model_dump_json())
+        display_response(response_data)
 
 # Pulsante per il Presidenzialismo
 if col4.button("Presidenzialismo"):
-    messages = [
-        {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-        {"role": "user", "content": "Com'è evoluta la posizione di Giorgia Meloni sul Presidenzialismo? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-    ]
-    response = client.chat.completions.create(
-        model="sonar-pro",
-        messages=messages,
-    )
-    response_data = json.loads(response.model_dump_json())
-    display_response(response_data)
+    with st.spinner("Caricamento in corso..."):
+        messages = [
+            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+            {"role": "user", "content": "Com'è evoluta la posizione di Giorgia Meloni sul Presidenzialismo? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
+        ]
+        response = client.chat.completions.create(
+            model="sonar-pro",
+            messages=messages,
+        )
+        response_data = json.loads(response.model_dump_json())
+        display_response(response_data)
