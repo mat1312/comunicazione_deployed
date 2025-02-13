@@ -4,22 +4,13 @@ import re
 from openai import OpenAI
 
 def replace_citations(text, citations):
-    """
-    Cerca nel testo tutte le occorrenze del pattern [numero] e, se esiste
-    un URL corrispondente nella lista citations (assumendo che la prima fonte
-    corrisponda a [1], la seconda a [2], ...), sostituisce il riferimento con
-    un link markdown cliccabile.
-    """
     def citation_link(match):
         num_str = match.group(1)
         try:
             idx = int(num_str) - 1
             if 0 <= idx < len(citations):
                 fonte = citations[idx]
-                if isinstance(fonte, dict):
-                    url = fonte.get("url", "")
-                else:
-                    url = fonte
+                url = fonte.get("url", "") if isinstance(fonte, dict) else fonte
                 return f"[{num_str}]({url})"
             else:
                 return match.group(0)
@@ -27,11 +18,10 @@ def replace_citations(text, citations):
             return match.group(0)
     return re.sub(r'\[(\d+)\]', citation_link, text)
 
-# Aggiungi custom CSS per rendere i bottoni a larghezza fissa e simmetrici
+# CSS per i bottoni
 st.markdown(
     """
     <style>
-    /* Imposta ogni bottone al 100% della larghezza della sua colonna */
     div.stButton > button {
         width: 100%;
     }
@@ -40,24 +30,19 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Configura l'API Perplexity
 YOUR_API_KEY = "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"
 client = OpenAI(api_key=YOUR_API_KEY, base_url="https://api.perplexity.ai")
 
 st.title("📢 Analisi della posizione politica di Giorgia Meloni")
 st.markdown("Seleziona l'argomento che desideri analizzare:")
 
-# Creazione di 4 colonne per i pulsanti (uguali in larghezza)
 col1, col2, col3, col4 = st.columns(4)
 
 def display_response(response_data):
-    # Estrae il testo della risposta
     risposta = response_data.get("choices", [{}])[0].get("message", {}).get("content", "Nessuna risposta disponibile.")
-    # Estrae l'elenco delle fonti (si assume che possa essere una lista di stringhe o di dizionari)
     fonti = response_data.get("citations", [])
     
     st.subheader("📜 Risultato dell'analisi:")
-    # Sostituisce i riferimenti nel testo con dei link cliccabili
     processed_text = replace_citations(risposta, fonti)
     st.markdown(processed_text, unsafe_allow_html=True)
     
@@ -74,61 +59,57 @@ def display_response(response_data):
     else:
         st.write("Nessuna fonte disponibile.")
 
-# Pulsante per l'autonomia differenziata
+# Inizializza la cronologia della conversazione (solo user e assistant)
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+def aggiorna_storia(ruolo, contenuto):
+    """Aggiunge un messaggio alla cronologia della conversazione."""
+    st.session_state.chat_history.append({"role": ruolo, "content": contenuto})
+
+def esegui_richiesta(prompt):
+    # Crea il messaggio di sistema e il messaggio corrente dell'utente
+    messages = [
+        {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+        {"role": "user", "content": prompt},
+    ]
+    with st.spinner("Caricamento in corso..."):
+        response = client.chat.completions.create(
+            model="sonar-pro",
+            messages=messages,
+        )
+        response_data = json.loads(response.model_dump_json())
+        display_response(response_data)
+        
+        # Estrai la risposta dell'assistente
+        assistant_msg = response_data.get("choices", [{}])[0].get("message", {}).get("content", "")
+        
+        # Aggiorna la cronologia con il turno completo (user e assistant)
+        aggiorna_storia("user", prompt)
+        aggiorna_storia("assistant", assistant_msg)
+        
+    return response_data
+
+# Pulsanti per richieste predefinite
 if col1.button("Autonomia Differenziata"):
-    with st.spinner("Caricamento in corso..."):
-        messages = [
-            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-            {"role": "user", "content": "Com'è cambiata l'opinione di Giorgia Meloni sull'Autonomia Differenziata? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-        ]
-        response = client.chat.completions.create(
-            model="sonar-pro",
-            messages=messages,
-        )
-        response_data = json.loads(response.model_dump_json())
-        display_response(response_data)
+    prompt = ("Com'è cambiata l'opinione di Giorgia Meloni sull'Autonomia Differenziata? "
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+    esegui_richiesta(prompt)
 
-# Pulsante per il Reddito di Cittadinanza
 if col2.button("Reddito di Cittadinanza"):
-    with st.spinner("Caricamento in corso..."):
-        messages = [
-            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-            {"role": "user", "content": "Com'è evoluta la posizione di Giorgia Meloni sul Reddito di Cittadinanza? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-        ]
-        response = client.chat.completions.create(
-            model="sonar-pro",
-            messages=messages,
-        )
-        response_data = json.loads(response.model_dump_json())
-        display_response(response_data)
+    prompt = ("Com'è evoluta la posizione di Giorgia Meloni sul Reddito di Cittadinanza? "
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+    esegui_richiesta(prompt)
 
-# Pulsante per il Bonus 110%
 if col3.button("Bonus 110%"):
-    with st.spinner("Caricamento in corso..."):
-        messages = [
-            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-            {"role": "user", "content": "Qual è la posizione di Giorgia Meloni sul Bonus 110%? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-        ]
-        response = client.chat.completions.create(
-            model="sonar-pro",
-            messages=messages,
-        )
-        response_data = json.loads(response.model_dump_json())
-        display_response(response_data)
+    prompt = ("Qual è la posizione di Giorgia Meloni sul Bonus 110%? "
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+    esegui_richiesta(prompt)
 
-# Pulsante per il Presidenzialismo
 if col4.button("Presidenzialismo"):
-    with st.spinner("Caricamento in corso..."):
-        messages = [
-            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-            {"role": "user", "content": "Com'è evoluta la posizione di Giorgia Meloni sul Presidenzialismo? Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero su questo argomento e spiega le eventuali ragioni politiche."},
-        ]
-        response = client.chat.completions.create(
-            model="sonar-pro",
-            messages=messages,
-        )
-        response_data = json.loads(response.model_dump_json())
-        display_response(response_data)
+    prompt = ("Com'è evoluta la posizione di Giorgia Meloni sul Presidenzialismo? "
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+    esegui_richiesta(prompt)
 
 st.markdown("---")
 st.subheader("Inserisci un prompt personalizzato")
@@ -136,21 +117,31 @@ custom_prompt = st.text_area("Scrivi qui il tuo prompt:")
 
 if st.button("Invia il prompt"):
     if custom_prompt.strip() != "":
-        with st.spinner("Caricamento in corso..."):
-            messages = [
-                {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
-                {"role": "user", "content": f"""L'utente desidera un'analisi dettagliata cronologica della posizione di un partito o politico su un tema specifico.
+        # Costruiamo i messaggi partendo dal sistema e includendo la cronologia completa
+        messages = [
+            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+        ]
+        messages.extend(st.session_state.chat_history)
+        messages.append({
+            "role": "user",
+            "content": f"""L'utente desidera un'analisi dettagliata cronologica della posizione di un partito o politico su un tema specifico.
 Genera una timeline con una sintesi delle dichiarazioni più rilevanti.
 
 Domanda dell'utente: {custom_prompt}
 
-Risposta attesa: un elenco con header grandi e paragrafi dettagliati ordinato nel tempo con le principali dichiarazioni, cambi di posizione e sviluppi del dibattito pubblico. Rispondi sempre con un formato leggibile e ben strutturato."""},
-            ]
+Risposta attesa: un elenco con header grandi e paragrafi dettagliati ordinato nel tempo con le principali dichiarazioni, cambi di posizione e sviluppi del dibattito pubblico. Rispondi sempre con un formato leggibile e ben strutturato."""
+        })
+        with st.spinner("Caricamento in corso..."):
             response = client.chat.completions.create(
                 model="sonar-pro",
                 messages=messages,
             )
             response_data = json.loads(response.model_dump_json())
             display_response(response_data)
+            
+            # Estrai la risposta dell'assistente e aggiorna la cronologia
+            assistant_msg = response_data.get("choices", [{}])[0].get("message", {}).get("content", "")
+            aggiorna_storia("user", custom_prompt)
+            aggiorna_storia("assistant", assistant_msg)
     else:
         st.error("Per favore, inserisci un prompt valido!")
