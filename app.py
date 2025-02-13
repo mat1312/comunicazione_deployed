@@ -129,3 +129,28 @@ if col4.button("Presidenzialismo"):
         )
         response_data = json.loads(response.model_dump_json())
         display_response(response_data)
+
+st.markdown("---")
+st.subheader("Inserisci un prompt personalizzato")
+custom_prompt = st.text_area("Scrivi qui il tuo prompt:")
+
+if st.button("Invia il prompt"):
+    if custom_prompt.strip() != "":
+        with st.spinner("Caricamento in corso..."):
+            messages = [
+                {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+                {"role": "user", "content": f"""L'utente desidera un'analisi dettagliata cronologica della posizione di un partito o politico su un tema specifico.
+Genera una timeline con una sintesi delle dichiarazioni più rilevanti.
+
+Domanda dell'utente: {custom_prompt}
+
+Risposta attesa: un elenco con header grandi e paragrafi dettagliati ordinato nel tempo con le principali dichiarazioni, cambi di posizione e sviluppi del dibattito pubblico. Rispondi sempre con un formato leggibile e ben strutturato."""},
+            ]
+            response = client.chat.completions.create(
+                model="sonar-pro",
+                messages=messages,
+            )
+            response_data = json.loads(response.model_dump_json())
+            display_response(response_data)
+    else:
+        st.error("Per favore, inserisci un prompt valido!")
