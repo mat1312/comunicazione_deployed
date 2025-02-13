@@ -180,7 +180,12 @@ if st.button("Invia il prompt"):
         messages.extend(st.session_state.chat_history)
         messages.append({
             "role": "user",
-            "content": custom_prompt
+            "content": f"""L'utente desidera un'analisi dettagliata cronologica della posizione di un partito o politico su un tema specifico.
+Genera una timeline con una sintesi delle dichiarazioni più rilevanti.
+
+Domanda dell'utente: {custom_prompt}
+
+Risposta attesa: un elenco con header grandi e paragrafi dettagliati ordinato nel tempo con le principali dichiarazioni, cambi di posizione e sviluppi del dibattito pubblico. Rispondi sempre con un formato leggibile e ben strutturato."""
         })
         with st.spinner("Caricamento in corso..."):
             response = client.chat.completions.create(
