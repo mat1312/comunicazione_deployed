@@ -181,7 +181,7 @@ if st.button("Invia il prompt"):
         messages.append({
             "role": "user",
             "content": f"""L'utente desidera un'analisi dettagliata cronologica della posizione di un partito o politico su un tema specifico.
-Genera una timeline con una sintesi delle dichiarazioni più rilevanti. Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali e dichiarazioni pubbliche.
+Genera una timeline con una sintesi delle dichiarazioni più rilevanti. Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali istituzionali e dichiarazioni pubbliche.
 
 Domanda dell'utente: {custom_prompt}
 
