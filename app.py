@@ -175,13 +175,13 @@ if st.button("Invia il prompt"):
     if custom_prompt.strip() != "":
         # Costruiamo i messaggi partendo dal sistema, aggiungendo la cronologia e il nuovo messaggio
         messages = [
-            {"role": "system", "content": "Sei un'assistente AI italiana che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
+            {"role": "system", "content": "Sei un'assistente AI italiana che risponde a domande sulla politica italiana, che risponde in modo dettagliato e cortese. Rispondi sempre con un formato leggibile e ben strutturato."},
         ]
         messages.extend(st.session_state.chat_history)
         messages.append({
             "role": "user",
             "content": f"""L'utente desidera un'analisi dettagliata cronologica della posizione di un partito o politico su un tema specifico.
-Genera una timeline con una sintesi delle dichiarazioni più rilevanti. Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali istituzionali e dichiarazioni pubbliche.
+Genera una timeline con una sintesi delle dichiarazioni più rilevanti. Usa solo fonti pro meloni attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali istituzionali e dichiarazioni pubbliche.
 
 Domanda dell'utente: {custom_prompt}
 
