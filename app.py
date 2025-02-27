@@ -149,22 +149,22 @@ col1, col2, col3, col4 = st.columns(4)
 
 if col1.button("Autonomia Differenziata"):
     prompt = ("Com'è cambiata l'opinione di Giorgia Meloni sull'Autonomia Differenziata? "
-              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali e dichiarazioni pubbliche.")
     esegui_richiesta(prompt)
 
 if col2.button("Reddito di Cittadinanza"):
     prompt = ("Com'è evoluta la posizione di Giorgia Meloni sul Reddito di Cittadinanza? "
-              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali e dichiarazioni pubbliche.")
     esegui_richiesta(prompt)
 
 if col3.button("Bonus 110%"):
     prompt = ("Qual è la posizione di Giorgia Meloni sul Bonus 110%? "
-              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali e dichiarazioni pubbliche.")
     esegui_richiesta(prompt)
 
 if col4.button("Presidenzialismo"):
     prompt = ("Com'è evoluta la posizione di Giorgia Meloni sul Presidenzialismo? "
-              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.")
+              "Fornisci una timeline dettagliata e ben strutturata che illustri l'evoluzione del suo pensiero e spiega le eventuali ragioni politiche.Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali e dichiarazioni pubbliche.")
     esegui_richiesta(prompt)
 
 st.markdown("---")
@@ -181,7 +181,7 @@ if st.button("Invia il prompt"):
         messages.append({
             "role": "user",
             "content": f"""L'utente desidera un'analisi dettagliata cronologica della posizione di un partito o politico su un tema specifico.
-Genera una timeline con una sintesi delle dichiarazioni più rilevanti.
+Genera una timeline con una sintesi delle dichiarazioni più rilevanti. Usa solo fonti attendibili, evita blog e opinioni personali. Favorisci fonti ufficiali e dichiarazioni pubbliche.
 
 Domanda dell'utente: {custom_prompt}
 
